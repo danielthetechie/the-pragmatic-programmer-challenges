@@ -7,7 +7,6 @@ language of choice. Do this before reading the rest of this challenge.
 # The algorithm idea is to map each character into an ASCII number
 # and then convert it into binary.
 def getBinaryRepresentationOfString (string):
-	#return ''.join (format (ord(i), '08b') for i in string)
 	res = ""
 	for c in string:
 		c = ord (c)
@@ -53,3 +52,5 @@ print (encoded_address_book)
 Translate that format into a plain-text format using XML or JSON
 """
 
+def getStringRepresentationOfBinary (string):
+	return string
