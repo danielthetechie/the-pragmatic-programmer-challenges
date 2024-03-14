@@ -1,21 +1,25 @@
 """
-Design a small address book database (name, phone number, and
-so on) using a straightforward binary representation in your
-language of choice. Do this before reading the rest of this challenge.
+=====================================================================
+1) Design a small address book database (name, phone number, and
+so on) using a straightforward binary representation in your language 
+of choice. Do this before reading the rest of this challenge.
+=====================================================================
 """
+
+CHAR_SIZE = 8 # In bits
 
 # The algorithm idea is to map each character into an ASCII number
 # and then convert it into binary.
 def getBinaryRepresentationOfString (string):
 	res = ""
 	for c in string:
-		c = ord (c)
+		c = ord (c) # Get the ASCI number of c
 		c = str (bin (c)[2:]) # To remove the prefix '0b' returned by bin().
 
 		# Since a char is 8 bits long, if the binary representation of c
 		# is shorter than 8 bits, we need to fill the missing bits by 0s.
 
-		missing_bits = 8 - len (c)
+		missing_bits = CHAR_SIZE - len (c)
 		c = ("0" * missing_bits) + c
 		res += str (c)
 
@@ -46,11 +50,89 @@ address_book_db.addEntryToAddressBook ({ 'id': 3, 'name': 'Son Goku', 'phone_num
 encoded_address_book = getBinaryRepresentationOfString (address_book_db.getAllEntries ())
 print (encoded_address_book)
 
-#00110001000010010100101001101111011010000110100000100000010001000110111101100101000010010010101100110001001101000011010100110110001100010011001000110011001101000000100100001010001100100000100101001010011010010110111000100000010010110110000101111010011000010110110101100001000010010010101100110100001100110011100100110001001100000011011100110010001110000000100100001010001100110000100101010011011011110110111000100000010001110110111101101011011101010000100100101011001101000011001100110010001101000011010100110000001100000011000100001001
+"""
+Output:
+
+0011000100001001010010100110111101101000011010000010000001000100011011110110010100001001001010
+1100110001001101000011010100110110001100010011001000110011001101000000100100001010001100100000
+1001010010100110100101101110001000000100101101100001011110100110000101101101011000010000100100
+1010110011010000110011001110010011000100110000001101110011001000111000000010010000101000110011
+0000100101010011011011110110111000100000010001110110111101101011011101010000100100101011001101
+000011001100110010001101000011010100110000001100000011000100001001
+"""
 
 """
-Translate that format into a plain-text format using XML or JSON
+===================================================================
+2) Translate that format into a plain-text format using XML or JSON
+===================================================================
 """
 
-def getStringRepresentationOfBinary (string):
-	return string
+# The algorith consists on splitting the binary sequence into chunks
+# of 8 bits, convert them to base-10 integers and then map their 
+# ASCII decimal representation to their corresponding char.
+def getStringRepresentationOfBinaryWord (binary_word):
+	string_result = ""
+	byte_word = ""
+	bite_count = 0
+	for b in binary_word:
+		bite_count += 1
+		byte_word += str (b)
+		if (bite_count == CHAR_SIZE):
+			ascii_dec_number = int ("0b" + byte_word, 2)
+			string_result +=  chr (ascii_dec_number)
+			byte_word = ""
+			bite_count = 0
+	return string_result
+
+print (getStringRepresentationOfBinaryWord (encoded_address_book))
+
+"""
+Output: 
+
+1	Johh Doe	+14561234	
+2	Jin Kazama	+43910728	
+3	Son Goku	+43245001
+"""
+
+def getStringRepresentationOfBinaryWord (binary_word):
+	string_result = ""
+	byte_word = ""
+	bite_count = 0
+	for b in binary_word:
+		bite_count += 1
+		byte_word += str (b)
+		if (bite_count == CHAR_SIZE):
+			ascii_dec_number = int ("0b" + byte_word, 2)
+			string_result +=  chr (ascii_dec_number)
+			byte_word = ""
+			bite_count = 0
+	return string_result
+
+def getAddressBookJSON (address_book_entries_binary_encoded):
+	json_result = ""
+	return json_result
+
+"""
+Intended output:
+
+[
+    {
+        "id": 1,
+        "name": "John Doe",
+        "phone_number": "+14561234"
+    },
+    {
+        "id": 2,
+        "name": "Jin Kazama",
+        "phone_number": "+43910728"
+    },
+    {
+        "id": 3,
+        "name": "Son Goku",
+        "phone_number": "+43245001"
+    }
+]
+"""
+
+address_book_entries_plain_text = address_book_db.getAllEntries ()
+print (getAddressBookJSON (address_book_entries_plain_text))
