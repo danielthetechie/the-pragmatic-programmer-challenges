@@ -43,12 +43,12 @@ class AddressBook ():
 
 address_book_db = AddressBook ()
 
-address_book_db.addEntryToAddressBook ({ 'id': 1, 'name': 'Johh Doe', 'phone_number': '+14561234' })
+address_book_db.addEntryToAddressBook ({ 'id': 1, 'name': 'John Doe', 'phone_number': '+14561234' })
 address_book_db.addEntryToAddressBook ({ 'id': 2, 'name': 'Jin Kazama', 'phone_number': '+43910728' })
 address_book_db.addEntryToAddressBook ({ 'id': 3, 'name': 'Son Goku', 'phone_number': '+43245001' })
 
-encoded_address_book = getBinaryRepresentationOfString (address_book_db.getAllEntries ())
-print (encoded_address_book)
+binary_encoded_address_book = getBinaryRepresentationOfString (address_book_db.getAllEntries ())
+#print (binary_encoded_address_book)
 
 """
 Output:
@@ -84,7 +84,8 @@ def getStringRepresentationOfBinaryWord (binary_word):
 			bite_count = 0
 	return string_result
 
-print (getStringRepresentationOfBinaryWord (encoded_address_book))
+print ("")
+print (getStringRepresentationOfBinaryWord (binary_encoded_address_book))
 
 """
 Output: 
@@ -94,23 +95,47 @@ Output:
 3	Son Goku	+43245001
 """
 
-def getStringRepresentationOfBinaryWord (binary_word):
-	string_result = ""
+# For convenience, I will assume that each row contains 
+# all 'id', 'name' and 'phone_number' fields - they are all mandatory.
+def getAddressBookJSONFromBinary (address_book_entries_binary_encoded):
+	bin_asciiname_map = { 
+		"00001001": "tab",
+		"00001010": "newline"
+	}
+	json_result = "["
 	byte_word = ""
 	bite_count = 0
-	for b in binary_word:
+	is_next_new_entry = True
+	for b in address_book_entries_binary_encoded:
 		bite_count += 1
 		byte_word += str (b)
-		if (bite_count == CHAR_SIZE):
-			ascii_dec_number = int ("0b" + byte_word, 2)
-			string_result +=  chr (ascii_dec_number)
+		if bite_count == CHAR_SIZE:
+
+			if is_next_new_entry == True:
+				json_result += "\n\t{\n\t\t\""
+
+			if (byte_word in bin_asciiname_map) and (bin_asciiname_map[byte_word] == "tab"):
+				json_result += "\",\n\t\t\""
+				is_next_new_entry = False
+			elif (byte_word in bin_asciiname_map) and (bin_asciiname_map[byte_word] == "newline"):
+				json_result += "},"
+				is_next_new_entry = True
+			else:
+				ascii_dec_number = int ("0b" + byte_word, 2)
+				json_result +=  chr (ascii_dec_number)
+				is_next_new_entry = False
 			byte_word = ""
 			bite_count = 0
-	return string_result
 
-def getAddressBookJSON (address_book_entries_binary_encoded):
-	json_result = ""
+	json_result += "\n]"
+	json_result = json_result.replace ("\t\"}", "}")
+	json_result = json_result.replace (",\n\t}", "\n\t}")
+	json_result = json_result.replace (",\n\t\t\"\n]", "\n\t}\n]")
+
 	return json_result
+
+print ("")
+print (getAddressBookJSONFromBinary (binary_encoded_address_book))
 
 """
 Intended output:
@@ -134,5 +159,4 @@ Intended output:
 ]
 """
 
-address_book_entries_plain_text = address_book_db.getAllEntries ()
-print (getAddressBookJSON (address_book_entries_plain_text))
+#address_book_entries_plain_text = address_book_db.getAllEntries ()
