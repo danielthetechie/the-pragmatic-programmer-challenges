@@ -160,18 +160,18 @@ Output:
 [
 	{
 		"id": 1,
-		 "name": "John Doe",
-		 "phone_number": "+14561234"
+		"name": "John Doe",
+		"phone_number": "+14561234"
 	},		 
 	{
 		"id": 2,
-		 "name": "Jin Kazama",
-		 "phone_number": "+43910728"
+		"name": "Jin Kazama",
+		"phone_number": "+43910728"
 	},		 
 	{
 		"id": 3,
-		 "name": "Son Goku",
-		 "phone_number": "+43245001"
+		"name": "Son Goku",
+		"phone_number": "+43245001"
 	}
 ]
 """
