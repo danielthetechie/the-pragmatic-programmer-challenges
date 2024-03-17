@@ -78,8 +78,8 @@ address_book_data_str = str (address_book_data)
 
 binary_encoded_address_book_data = getBinaryRepresentationOfString (address_book_data_str)
 
+print ("Answer of 1):")
 print (binary_encoded_address_book_data)
-print ("")
 
 """
 Output:
@@ -152,6 +152,8 @@ def getJSONFromDictionaryString (dictionary_string):
 	return json_result
 
 decoded_to_str_address_book_entries = getPlainTextRepresentationOfBinaryWord (binary_encoded_address_book_data)
+
+print ("\n\nAnswer of 2):")
 print (getJSONFromDictionaryString (decoded_to_str_address_book_entries))
 
 """
@@ -202,6 +204,9 @@ in which you might enter directions to each person’s house.
 =======================================================================
 """
 
+
+# 3.1) Plain text file version:
+
 # The AddressBook class is already defined, and for the sake of keeping
 # the order in the exercises, I will create a separate function and add
 # add it to the class as a method.
@@ -218,8 +223,59 @@ AddressBook.addDirectionToEntryById = addDirectionToEntryById
 
 address_book_db.addDirectionToEntryById ("Yakushima's mountains, Japan", 2)
 
-print ("")
+print ("\n\nAnswer of 3):\n3.1) After modifying the entries with plain text: \n")
 print (getJSONFromDictionaryString (str (address_book_db.getEntries ())))
+
+"""
+Output:
+
+[
+	{
+		"id": 1,
+		"name": "John Doe",
+		"phone_number": "+14561234"
+	}, 
+	{
+		"id": 2,
+		"name": "Jin Kazama",
+		"phone_number": "+43910728",
+		"direction": "Yakushima"s mountains, Japan"
+	}, 
+	{
+		"id": 3,
+		"name": "Son Goku",
+		"phone_number": "+43245001"
+	}
+]
+"""
+
+# 3.2) Binary version:
+
+def addDirectionToBinaryEntryById (direction_value, entry_id, address_book_data_binary):
+	is_updated = False
+	direction_key = getBinaryRepresentationOfString (", 'direction': ")
+	direction_value = getBinaryRepresentationOfString ("'" + direction_value + "'")
+	entry_id = getBinaryRepresentationOfString (str (entry_id))
+
+	id_key = getBinaryRepresentationOfString ("'id': ")
+	id_key_and_value_bin = id_key + entry_id
+
+	updated_entries_binary = ""
+
+	for c in address_book_data_binary:
+		updated_entries_binary += c
+		if (id_key_and_value_bin in updated_entries_binary) and is_updated == False:
+			updated_entries_binary += direction_key + direction_value
+			is_updated = True
+
+	return updated_entries_binary
+
+updated_address_book_binary = addDirectionToBinaryEntryById ("Mount Paozu, Japan", 3, binary_encoded_address_book_data)
+updated_address_book_plain_text = getPlainTextRepresentationOfBinaryWord (updated_address_book_binary)
+json_updated_address_book = getJSONFromDictionaryString (updated_address_book_plain_text)
+
+print ("\n\n3.2) After modifying the entries through their binary representation: \n")
+print (json_updated_address_book)
 
 """
 Output:
@@ -259,13 +315,12 @@ Output:
 """
 Answers:
 
-4)	Probably the aim of the last question was to take the binary encoded entries and add the 'direction' 
-	entries there, instead of just adding it directly as a method in the class definition (the statement 
-	wasn't too clear about it anyway), but I'm not a masochist, and since the spirit of the exercise is 
-	to convince you that working with plain text is more convenient, I will concede that.
+4)	In the binary way of working with the address book, adding a new "direction" key was more challenging 
+	because you have to parse the binary code and find the correct needle, and in the function
+	addDirectionToBinaryEntryById () I didn't even write a validation code to check whether the key
+	"direction" exists or not, so this would have been another not-so-straighforward subchallenge.
 
-5)	If I was supposed to search the entry ID in the binary encoded entries and then add the new 'direction' field
-	there (previously encoded it to binary too), then yeah, I suppose it would have been a pain in the ass.
+5)	By looking at the code below the 3.1) section and then the code below 3.2) the question answers itself.
 
 6)	Converting data is not a problem once we use the getBinaryRepresentationOfString () and
 	getPlainTextRepresentationOfBinaryWord () functions defined before, but of course, if the database grows large,
