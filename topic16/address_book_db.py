@@ -204,7 +204,6 @@ in which you might enter directions to each person’s house.
 =======================================================================
 """
 
-
 # 3.1) Plain text file version:
 
 # The AddressBook class is already defined, and for the sake of keeping
@@ -289,11 +288,11 @@ Output:
 	{
 		"id": 2,
 		"name": "Jin Kazama",
-		"phone_number": "+43910728",
-		"direction": "Yakushima"s mountains, Japan"
+		"phone_number": "+43910728"
 	}, 
 	{
 		"id": 3,
+		"direction": "Mount Paozu, Japan",
 		"name": "Son Goku",
 		"phone_number": "+43245001"
 	}
