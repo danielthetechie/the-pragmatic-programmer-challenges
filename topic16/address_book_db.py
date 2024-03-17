@@ -217,7 +217,6 @@ def addDirectionToEntryById (self, direction, entry_id):
 
 AddressBook.addDirectionToEntryById = addDirectionToEntryById
 
-
 address_book_db.addDirectionToEntryById ("Yakushima's mountains, Japan", 2)
 
 print ("")
