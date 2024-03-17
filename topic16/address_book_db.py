@@ -174,7 +174,6 @@ Output:
 		 "phone_number": "+43245001"
 	}
 ]
-
 """
 
 # Additionally, and although this is not the main goal of this exercise,
@@ -222,6 +221,28 @@ address_book_db.addDirectionToEntryById ("Yakushima's mountains, Japan", 2)
 print ("")
 print (getJSONFromDictionaryString (str (address_book_db.getEntries ())))
 
+"""
+Output:
+
+[
+	{
+		"id": 1,
+		"name": "John Doe",
+		"phone_number": "+14561234"
+	}, 
+	{
+		"id": 2,
+		"name": "Jin Kazama",
+		"phone_number": "+43910728",
+		"direction": "Yakushima"s mountains, Japan"
+	}, 
+	{
+		"id": 3,
+		"name": "Son Goku",
+		"phone_number": "+43245001"
+	}
+]
+"""
 
 """
 =======================================================================
