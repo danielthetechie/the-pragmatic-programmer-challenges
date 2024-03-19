@@ -40,14 +40,27 @@ class CustomMiniLanguage ():
 
 		self.requires_int_parameter = ['P', 'N', 'S', 'W', 'E']
 
+	def getErrorMessageByCodeAndCommand (self, int_code, command):
+		error_codes = {
+			1: "Error: " + command + " requires an integer parameter.",
+			2: "Error: Unknown command (" + command + ")."
+		}
+
+		return error_codes[int_code]
+
 	def getActionByCommand (self, command, int_parameter = None):
 		if command in self.actions:
 			action = self.actions[command]
+
 			if (command in self.requires_int_parameter) and int_parameter:
 				action += " " + str (int_parameter)
+
+			elif (command in self.requires_int_parameter) and type (int_parameter) != int:
+				return 1
+
 			return action
 		else:
-			return "Unknown command"
+			return 2
 
 	def parseUserCommands (self, commands_list):
 		commands_list = commands_list.split (" ")
@@ -60,6 +73,11 @@ class CustomMiniLanguage ():
 		for i in range (0, len (commands_list)):
 			command_verb = "".join (re.findall (r'[A-Za-z]', commands_list[i]))
 			command_int_parameter = "".join (re.findall (r'\d', commands_list[i]))
+
+			intent = self.getActionByCommand (command_verb, command_int_parameter)
+
+			if type (intent) == int:
+				return self.getErrorMessageByCodeAndCommand (intent, command_verb)
 
 			if len (translated_actions) > 0 and ("draw" in translated_actions[i - 1] or "then" in translated_actions[i - 1]):
 				current_action = self.getActionByCommand (command_verb, command_int_parameter).replace ("draw", "then")
@@ -83,13 +101,50 @@ class CustomMiniLanguage ():
 
 cml = CustomMiniLanguage ()
 
+
 commands_list = "P2 D W2 N1 E2 S1 U"
 print (cml.parseUserCommands (commands_list))
 
-#commands_list = input ("Enter commands: ")
+"""
+Output:
+
+select pen 2
+pen down
+draw west 2
+then north 1
+then east 2
+then south 1
+pen up
+"""
+
+commands_list = "P2 D W2 N E2 S1 U"
+print (cml.parseUserCommands (commands_list))
 
 """
-cml.addNewCommand ("C", "cancel")
-print (cml.getActionByCommand ("C"))
-cml.addNewCommand ("P", "paint")
+Output:
+
+Error: N requires an integer parameter.
+"""
+
+commands_list = "P2 D J N1 E2 S1 U"
+print (cml.parseUserCommands (commands_list))
+
+"""
+Output:
+
+Error: Unknown command (J).
+"""
+
+cml.addNewCommand ("J", "jump to", True)
+commands_list = "P2 D J5 N1 E2 S1 U"
+print (cml.parseUserCommands (commands_list))
+
+"""
+select pen 2
+pen down
+jump to 5
+draw north 1
+then east 2
+then south 1
+pen up
 """
